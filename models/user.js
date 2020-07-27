@@ -12,6 +12,11 @@ module.exports = function(sequelize, DataTypes) {
         isEmail: true
       }
     },
+    nickname: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      unique: true
+    },
     // The password cannot be null
     password: {
       type: DataTypes.STRING,
@@ -31,5 +36,12 @@ module.exports = function(sequelize, DataTypes) {
       null
     );
   });
+
+  User.associate = function(models) {
+    User.hasMany(models.Story, {
+      onDelete: "cascade"
+    });
+  };
+
   return User;
 };

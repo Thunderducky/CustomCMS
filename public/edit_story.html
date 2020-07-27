@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" media="screen" title="no title">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h1>Edit Story</h1>
+    <div>
+        <label>Title: </label><input type="text" id="title" placeholder="title"><br>
+        <label>Body: </label><br>
+        <textarea type="text" id="body" placeholder="body" rows="20" cols="100"></textarea><br>
+        <label>Category: </label><input type="text" id="category" placeholder="category">
+        <label>Published: </label><input type="checkbox" id="published">
+        <button id="submit">Submit</button>
+    </div>
+    <script type="text/javascript">
+        const id = new URLSearchParams(window.location.search.substr(1)).get("id");
+        $.get("/api/story/edit/" + id).then(story => {
+            console.log(story);
+            $("#title").val(story.title);
+            $("#body").val(story.body);
+            $("#category").val(story.category);
+            $("#published").prop("checked", true);
+        })
+        $("#submit").on('click', function(){
+            const title = $("#title").val();
+            const body = $("#body").val();
+            const category = $("#category").val();
+            const published = $("#published").prop("checked") == true;
+            $.ajax({url: "/api/story", method: "PUT", data: {
+                id,
+                title,
+                body,
+                category,
+                published
+            }}).then(() => {
+                window.location.href = "/my_stories";
+            })
+        })
+    </script> 
+</body>
+</html>
